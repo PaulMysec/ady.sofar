@@ -57,6 +57,16 @@
 				</label>
 			</div>
 		<div class="field row">
+			<label class="homey-form-label" for="manual_ip">Manual Inverter IP (Optional)</label>
+			<input class="homey-form-input" id="manual_ip" type="text" value="" placeholder="e.g. 192.168.1.200" />
+		</div>
+		<div class="field row">
+			<label class="homey-form-label" for="manual_serial">Manual Serial Number</label>
+			<input class="homey-form-input" id="manual_serial" type="number" value="" placeholder="e.g. 2104161146" />
+		</div>
+		<p><button class="homey-button-secondary-shadow" id="saveManualSettings">Save IP Config</button></p>
+		<hr>
+		<div class="field row">
 			<label class="homey-form-label"  for="email"><span data-i18n="settings.email"></span></label>
 			<input class="homey-form-input" id="email" type="text" value="" />
 			<P></P>
@@ -96,6 +106,11 @@
 
 		var clearLogElement = document.getElementById('clearDiagLog');
 		var sendDiagLogElement = document.getElementById('sendDiagLog');
+
+		// Manual Config
+		var manualIpElement = document.getElementById('manual_ip');
+		var manualSerialElement = document.getElementById('manual_serial');
+		var saveManualSettingsElement = document.getElementById('saveManualSettings');
 
 		// Send data tab
 		var commandDataElement = document.getElementById('commandData');
@@ -176,6 +191,24 @@
 			{
 				if (err) return Homey.alert(err);
 				logEnabledElement.checked = logEnabled;
+			});
+
+			Homey.get('manual_ip', function(err, value) {
+				if (value) manualIpElement.value = value;
+			});
+
+			Homey.get('manual_serial', function(err, value) {
+				if (value) manualSerialElement.value = value;
+			});
+
+			saveManualSettingsElement.addEventListener('click', function(e) {
+				Homey.set('manual_ip', manualIpElement.value, function(err) {
+					if (err) return Homey.alert(err);
+				});
+				Homey.set('manual_serial', manualSerialElement.value, function(err) {
+					if (err) return Homey.alert(err);
+				});
+				Homey.alert('Settings saved successfully!');
 			});
 
 			Homey.api('GET', '/getLog/',
@@ -375,5 +408,6 @@
 	</script>
 
 </body>
+
 
 </html>

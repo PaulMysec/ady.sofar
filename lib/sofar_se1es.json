@@ -1,0 +1,107 @@
+{
+    "requests": [
+        {
+            "start": 524,
+            "end": 561,
+            "mb_functioncode": 3
+        }
+    ],
+    "parameters": [
+        {
+            "group": "grid",
+            "items": [
+                {
+                    "name": "Grid_Frequency",
+                    "rule": 1,
+                    "registers": [
+                        524
+                    ],
+                    "scale": 0.01,
+                    "offset": 0
+                },
+                {
+                    "name": "Grid_Voltage",
+                    "rule": 1,
+                    "registers": [
+                        560
+                    ],
+                    "scale": 0.1,
+                    "offset": 0
+                },
+                {
+                    "name": "Grid_Power",
+                    "rule": 2,
+                    "registers": [
+                        530
+                    ],
+                    "scale": 1,
+                    "offset": 0
+                },
+                {
+                    "name": "Consumption",
+                    "rule": 1,
+                    "registers": [
+                        538
+                    ],
+                    "scale": 1,
+                    "offset": 0
+                }
+            ]
+        },
+        {
+            "group": "battery",
+            "items": [
+                {
+                    "name": "Battery_Voltage",
+                    "rule": 1,
+                    "registers": [
+                        526
+                    ],
+                    "scale": 0.01,
+                    "offset": 0
+                },
+                {
+                    "name": "Battery_Current",
+                    "rule": 2,
+                    "registers": [
+                        527
+                    ],
+                    "scale": 0.01,
+                    "offset": 0
+                },
+                {
+                    "name": "Battery_Charge",
+                    "rule": 1,
+                    "registers": [
+                        528
+                    ],
+                    "scale": 1,
+                    "offset": 0
+                },
+                {
+                    "name": "Battery_Power",
+                    "rule": 2,
+                    "registers": [
+                        527
+                    ],
+                    "scale": 10,
+                    "offset": 0
+                }
+            ]
+        },
+        {
+            "group": "inverter",
+            "items": [
+                {
+                    "name": "Internal_Temperature",
+                    "rule": 1,
+                    "registers": [
+                        529
+                    ],
+                    "scale": 1,
+                    "offset": 0
+                }
+            ]
+        }
+    ]
+}

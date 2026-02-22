@@ -61,8 +61,22 @@ class MyApp extends Homey.App {
 				// Remove the port number
 				const ip = this.homeyIP.split(':');
 
-				this.scanner = new Scanner(this.homey, ip[0]);
-				this.scanner.startScanning(this.scannerFoundADevice);
+				// Disable UDP scanning: this.scanner = new Scanner(this.homey, ip[0]);
+				// this.scanner.startScanning(this.scannerFoundADevice);
+
+				// Read manual configurations instead of broadcasting UDP
+				let manual_ip = this.homey.settings.get('manual_ip');
+				let manual_serial = parseInt(this.homey.settings.get('manual_serial'), 10);
+
+				if (manual_ip && manual_serial) {
+					this.updateLog(`Using Manual Configuration: IP=${manual_ip}, S.No=${manual_serial}`, 0);
+					this.homey.setTimeout(() => {
+						this.scannerFoundADevice(manual_ip, manual_serial);
+					}, 2000);
+				} else {
+					this.updateLog('No Manual IP or Serial Number configured in App Settings.', 0);
+				}
+
 			}
 		}
 		catch (err) {
@@ -70,6 +84,23 @@ class MyApp extends Homey.App {
 			this.homeyIP = null;
 			this.scanner = null;
 		}
+
+		let manual_config_timer = null;
+		this.homey.settings.on('set', async (setting) => {
+			if (setting === 'manual_ip' || setting === 'manual_serial') {
+				if (manual_config_timer) {
+					this.homey.clearTimeout(manual_config_timer);
+				}
+				manual_config_timer = this.homey.setTimeout(() => {
+					let manual_ip = this.homey.settings.get('manual_ip');
+					let manual_serial = parseInt(this.homey.settings.get('manual_serial'), 10);
+					if (manual_ip && manual_serial) {
+						this.updateLog(`Debounced Settings Load: Calling scanner for ${manual_ip}...`, 0);
+						this.scannerFoundADevice(manual_ip, manual_serial);
+					}
+				}, 3000);
+			}
+		});
 
 		this.homey.app.updateLog('************** App has initialised. ***************');
 	}
@@ -103,6 +134,7 @@ class MyApp extends Homey.App {
 					const serial = sensor.getSerial();
 
 					this.updateLog(`Inverter data: : ${serial}, ${this.varToString(result)}`);
+					console.log(`[ADY.SOFAR DEBUG] Inverter ${serial} data received:`, result);
 
 					const drivers = this.homey.drivers.getDrivers();
 					for (const driver of Object.values(drivers)) {
@@ -116,6 +148,7 @@ class MyApp extends Homey.App {
 				}
 				else {
 					this.updateLog('No Data');
+					console.log('[ADY.SOFAR DEBUG] getStatistics returned null/No Data');
 				}
 			}
 
@@ -150,10 +183,13 @@ class MyApp extends Homey.App {
 			this.updateLog('Returned null.\n\nChecking register 33282 for grid frequency:', 0);
 			sensor = await this.checkSensor(ip, serial, 33282, 'solis_hybrid');
 		}
-		if (sensor === null)
-		{
+		if (sensor === null) {
 			this.updateLog('Returned null.\n\nChecking register 33282 for grid frequency:', 0);
 			sensor = await this.checkSensor(ip, serial, 609, 'sun3p');
+		}
+		if (sensor === null) {
+			this.updateLog('Returned null.\n\nChecking register 524 for SE1ES grid frequency:', 0);
+			sensor = await this.checkSensor(ip, serial, 524, 'sofar_se1es');
 		}
 		if (sensor === null) {
 			this.updateLog('Returned null.\n\nNo suitable inverters found', 0);

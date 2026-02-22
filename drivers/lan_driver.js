@@ -4,25 +4,19 @@
 
 const { Driver } = require('homey');
 
-class LanDriver extends Driver
-{
+class LanDriver extends Driver {
 
-	async getLanDevices(Type)
-	{
+	async getLanDevices(Type) {
 		const inverters = this.homey.app.getDiscoveredInverters();
 		this.homey.app.updateLog(`Inverters: ${this.homey.app.varToString(inverters)}`, 2);
 
-		if (inverters.length > 0)
-		{
+		if (inverters.length > 0) {
 			const devices = [];
 
 			// Create an array of devices
-			for (const device of inverters)
-			{
-				for (const group of device.inverter.parameter_definition.parameters)
-				{
-					if (group.group === Type)
-					{
+			for (const device of inverters) {
+				for (const group of device.inverter.parameter_definition.parameters) {
+					if (group.group === Type) {
 						let data = {};
 						data = {
 							id: device.inverter_sn,
