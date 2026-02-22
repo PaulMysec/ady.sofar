@@ -4,6 +4,16 @@
             "start": 524,
             "end": 561,
             "mb_functioncode": 3
+        },
+        {
+            "start": 1540,
+            "end": 1546,
+            "mb_functioncode": 3
+        },
+        {
+            "start": 1684,
+            "end": 1691,
+            "mb_functioncode": 3
         }
     ],
     "parameters": [
@@ -86,19 +96,63 @@
                     ],
                     "scale": 10,
                     "offset": 0
-                }
-            ]
-        },
-        {
-            "group": "inverter",
-            "items": [
+                },
                 {
-                    "name": "Internal_Temperature",
+                    "name": "Battery_Temperature",
                     "rule": 1,
                     "registers": [
                         529
                     ],
                     "scale": 1,
+                    "offset": 0
+                },
+                {
+                    "name": "Battery_Cycles",
+                    "rule": 1,
+                    "registers": [
+                        1546
+                    ],
+                    "scale": 1,
+                    "offset": 0
+                },
+                {
+                    "name": "Battery_Charge_Today",
+                    "rule": 3,
+                    "registers": [
+                        1685,
+                        1684
+                    ],
+                    "scale": 0.01,
+                    "offset": 0
+                },
+                {
+                    "name": "Battery_Discharge_Today",
+                    "rule": 3,
+                    "registers": [
+                        1689,
+                        1688
+                    ],
+                    "scale": 0.01,
+                    "offset": 0
+                },
+                {
+                    "name": "Battery_Charge_Total",
+                    "rule": 3,
+                    "registers": [
+                        1687,
+                        1686
+                    ],
+                    "scale": 0.1,
+                    "offset": 0
+                },
+                {
+                    "name": "Battery_Discharge_Total",
+                    "rule": 3,
+                    "registers": [
+                        1691,
+                        1690
+                    ],
+                    "scale": 0.1,
                     "offset": 0
                 }
             ]
